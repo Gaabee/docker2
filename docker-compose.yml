@@ -1,0 +1,25 @@
+version: "3"
+services:
+  php:
+    image: wordpress:5.8
+    restart: unless-stopped
+    volumes:
+      - ./www:/var/www/html
+      - ./wordpress.ini:/usr/local/etc/php/conf.d/wordpress.ini
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pflnzcom.rule=Host(`pflnz.com`)"
+      - "traefik.http.routers.pflnzcom.entrypoints=websecure"
+      - "traefik.http.routers.pflnzcom.tls=true"
+      - "traefik.http.routers.pflnzcom.tls.certresolver=myresolver"
+    expose:
+      - 443
+      - 80
+    networks:
+      traefik:
+      db:
+networks:
+  traefik:
+    external: true
+  db:
+    external: true
